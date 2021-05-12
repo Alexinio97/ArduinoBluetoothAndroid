@@ -20,6 +20,9 @@ void setup() {
   pulseSensor.analogInput(PULSE_SENSOR_PIN);
   pulseSensor.setThreshold(Threshold);
   dht.begin();
+  if (pulseSensor.begin()) {
+    Serial.println("PulseSensor object created!");
+  }
   
   Bluetooth.begin(9600);
 
@@ -29,6 +32,7 @@ void setup() {
 }
 
 void loop() {
+  
   if(Bluetooth.available()){
     msg=Bluetooth.readString();
     isAvailable = 1; // in order to send it continously 
@@ -37,7 +41,7 @@ void loop() {
   if (isAvailable > 0)
   {
     get_temperature();
-    get_health_ecg();
+    //get_health_ecg();
     get_BPM();
   }
   // send data at the interval of 10 seconds
@@ -68,7 +72,7 @@ void get_temperature(){
   Serial.print("Humidity:");
   Serial.println(h);
 
-  sprintf(buff,"%d;%d ",h,t);
+  sprintf(buff,"%d;%d;",h,t);
   Bluetooth.write(buff);
 }
 
